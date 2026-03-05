@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
+import { GiftCardTemplatesModule } from './gift-card-templates/gift-card-templates.module';
+import { GiftCardsModule } from './gift-cards/gift-cards.module';
+import { WidgetsModule } from './widgets/widgets.module';
 import databaseConfig from './database/config/database.config';
 import authConfig from './auth/config/auth.config';
 import appConfig from './config/app.config';
@@ -92,6 +95,9 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     MailModule,
     MailerModule,
     HomeModule,
+    GiftCardTemplatesModule,
+    GiftCardsModule,
+    WidgetsModule,
   ],
 })
 export class AppModule {}

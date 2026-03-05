@@ -119,6 +119,46 @@ export class MailService {
     });
   }
 
+  async giftCardPurchase(
+    mailData: MailData<{
+      code: string;
+      amount: number;
+      purchaserName: string;
+      recipientName?: string;
+      notes?: string;
+    }>,
+  ): Promise<void> {
+    const url = new URL(
+      this.configService.getOrThrow('app.frontendDomain', {
+        infer: true,
+      }) + '/gift-cards/balance',
+    );
+
+    await this.mailerService.sendMail({
+      to: mailData.to,
+      subject: `Your Gift Card from ${this.configService.get('app.name', { infer: true })}`,
+      text: `Your gift card code is ${mailData.data.code} for $${mailData.data.amount}`,
+      templatePath: path.join(
+        this.configService.getOrThrow('app.workingDirectory', {
+          infer: true,
+        }),
+        'src',
+        'mail',
+        'mail-templates',
+        'gift-card-purchase.hbs',
+      ),
+      context: {
+        app_name: this.configService.get('app.name', { infer: true }),
+        purchaserName: mailData.data.purchaserName,
+        code: mailData.data.code,
+        amount: mailData.data.amount.toFixed(2),
+        recipientName: mailData.data.recipientName,
+        notes: mailData.data.notes,
+        balanceUrl: url.toString(),
+      },
+    });
+  }
+
   async confirmNewEmail(mailData: MailData<{ hash: string }>): Promise<void> {
     const i18n = I18nContext.current();
     let emailConfirmTitle: MaybeType<string>;
