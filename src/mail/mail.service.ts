@@ -7,6 +7,10 @@ import { MaybeType } from '../utils/types/maybe.type';
 import { MailerService } from '../mailer/mailer.service';
 import path from 'path';
 import { AllConfigType } from '../config/config.type';
+import {
+  generateGiftCardPdf,
+  generateGiftCardImage,
+} from '../gift-cards/utils/generate-gift-card-pdf';
 
 @Injectable()
 export class MailService {
@@ -124,9 +128,11 @@ export class MailService {
       code: string;
       amount: number;
       currencySymbol: string;
+      currencyCode: string;
       purchaserName: string;
       recipientName?: string;
       notes?: string;
+      expirationDate?: Date;
       templateImage?: string;
       codePosition?: {
         x: number;
@@ -137,6 +143,7 @@ export class MailService {
         fontColor?: string;
         alignment?: string;
       };
+      qrPosition?: { x: number; y: number; size: number };
     }>,
     bcc?: string[],
   ): Promise<void> {
@@ -155,20 +162,67 @@ export class MailService {
     const { templateImage, codePosition } = mailData.data;
     const hasTemplate = !!(templateImage && codePosition);
 
-    // Build printable HTML attachment
     const attachments: Array<{
       filename: string;
-      content: string;
-      contentType: string;
+      content: Buffer | string;
+      contentType?: string;
+      cid?: string;
     }> = [];
+
+    let hasInlineImage = false;
+
+    // Compute expiration label
+    let expirationLabel = 'EXP: Never';
+    if (mailData.data.expirationDate) {
+      const d = new Date(mailData.data.expirationDate);
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      expirationLabel =
+        mailData.data.currencyCode === 'USD'
+          ? `EXP: ${mm}/${dd}/${yyyy}`
+          : `EXP: ${dd}/${mm}/${yyyy}`;
+    }
+
     if (hasTemplate) {
-      const cp = codePosition!;
-      const printableHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gift Card - ${mailData.data.code}</title><style>@media print{body{margin:0}}</style></head><body style="margin:0;font-family:arial;text-align:center;background:#f5f5f5"><div style="max-width:600px;margin:20px auto;background:#fff;padding:20px;border-radius:8px"><div style="position:relative;display:inline-block;width:100%"><img src="${templateImage}" style="width:100%;display:block" /><div style="position:absolute;left:${cp.x}%;top:${cp.y}%;width:${cp.width}%;height:${cp.height}%;display:flex;align-items:center;justify-content:${cp.alignment || 'center'};overflow:hidden"><span style="font-size:${cp.fontSize || 16}px;color:${cp.fontColor || '#000'};font-weight:bold;white-space:nowrap">${mailData.data.code}</span></div></div><h2 style="font-family:monospace;margin:16px 0 8px">${mailData.data.code}</h2><h3 style="color:#00838f;margin:0">${mailData.data.currencySymbol}${mailData.data.amount.toFixed(2)}</h3>${mailData.data.recipientName ? `<p>For: ${mailData.data.recipientName}</p>` : ''}${mailData.data.notes ? `<p style="font-style:italic;color:#555">&ldquo;${mailData.data.notes}&rdquo;</p>` : ''}</div></body></html>`;
-      attachments.push({
-        filename: `gift-card-${mailData.data.code}.html`,
-        content: printableHtml,
-        contentType: 'text/html',
-      });
+      const qrUrl =
+        this.configService.getOrThrow('app.frontendDomain', {
+          infer: true,
+        }) + `/gift-cards/qr/${mailData.data.code}`;
+
+      const renderOpts = {
+        templateImage: templateImage!,
+        code: mailData.data.code,
+        amount: mailData.data.amount.toFixed(2),
+        currencySymbol: mailData.data.currencySymbol,
+        codePosition: codePosition!,
+        recipientName: mailData.data.recipientName,
+        notes: mailData.data.notes,
+        expirationLabel,
+        qrUrl,
+        qrPosition: mailData.data.qrPosition,
+      };
+
+      try {
+        // Generate inline image for email
+        const imageBuffer = await generateGiftCardImage(renderOpts);
+        attachments.push({
+          filename: 'gift-card.png',
+          content: imageBuffer,
+          cid: 'giftcardimage',
+        });
+        hasInlineImage = true;
+
+        // Generate PDF attachment
+        const pdfBuffer = await generateGiftCardPdf(renderOpts);
+        attachments.push({
+          filename: `gift-card-${mailData.data.code}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf',
+        });
+      } catch {
+        // If PDF generation fails, still send the email without attachments
+      }
     }
 
     await this.mailerService.sendMail({
@@ -192,34 +246,25 @@ export class MailService {
         code: mailData.data.code,
         amount: mailData.data.amount.toFixed(2),
         currencySymbol: mailData.data.currencySymbol,
+        expirationLabel,
         recipientName: mailData.data.recipientName,
         notes: mailData.data.notes,
         balanceUrl: url.toString(),
         viewUrl: viewUrl.toString(),
-        hasTemplate,
-        templateImage,
-        cpX: codePosition?.x,
-        cpY: codePosition?.y,
-        cpWidth: codePosition?.width,
-        cpHeight: codePosition?.height,
-        cpFontSize: codePosition?.fontSize || 16,
-        cpFontColor: codePosition?.fontColor || '#000',
-        cpAlignment: codePosition?.alignment || 'center',
+        hasInlineImage,
       },
     });
   }
 
-  async giftCardPurchaseNotification(
-    mailData: {
-      to: string[];
-      code: string;
-      amount: number;
-      currencySymbol: string;
-      purchaserName: string;
-      purchaserEmail: string;
-      recipientName?: string;
-    },
-  ): Promise<void> {
+  async giftCardPurchaseNotification(mailData: {
+    to: string[];
+    code: string;
+    amount: number;
+    currencySymbol: string;
+    purchaserName: string;
+    purchaserEmail: string;
+    recipientName?: string;
+  }): Promise<void> {
     if (!mailData.to.length) return;
 
     const appName = this.configService.get('app.name', { infer: true });

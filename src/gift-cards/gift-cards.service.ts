@@ -27,9 +27,12 @@ export class GiftCardsService {
   ) {}
 
   async purchase(dto: CreateGiftCardDto): Promise<GiftCard> {
+    const template = await this.templatesService.findById(dto.templateId);
+    const prefix = template?.codePrefix || 'GC';
+
     let code: string;
     do {
-      code = generateGiftCardCode();
+      code = generateGiftCardCode(prefix);
     } while (!(await this.repository.isCodeUnique(code)));
 
     const giftCard = await this.repository.create({
@@ -52,18 +55,20 @@ export class GiftCardsService {
     const currencySymbol = CURRENCY_SYMBOLS[settings.currency] || '£';
     const bcc = settings.notificationEmails || [];
 
-    // Look up template for email visual
-    const template = await this.templatesService.findById(dto.templateId);
+    // Look up template for email visual — already fetched above
 
     const emailData = {
       code: giftCard.code,
       amount: giftCard.originalAmount,
       currencySymbol,
+      currencyCode: settings.currency,
       purchaserName: dto.purchaserName,
       recipientName: dto.recipientName,
       notes: dto.notes,
+      expirationDate: template?.expirationDate,
       templateImage: template?.image,
       codePosition: template?.codePosition,
+      qrPosition: template?.qrPosition,
     };
 
     // Send email to purchaser (BCC notification list)
@@ -108,12 +113,43 @@ export class GiftCardsService {
     return this.repository.findById(id);
   }
 
-  findByCode(code: string): Promise<NullableType<GiftCard>> {
-    return this.repository.findByCode(code);
+  async findByCode(code: string): Promise<NullableType<GiftCard>> {
+    const giftCard = await this.repository.findByCode(code);
+    if (giftCard) {
+      await this.checkExpiration(giftCard);
+    }
+    return giftCard;
   }
 
-  findByEmail(email: string): Promise<GiftCard[]> {
-    return this.repository.findByEmail(email);
+  async findByEmail(email: string): Promise<GiftCard[]> {
+    const cards = await this.repository.findByEmail(email);
+    for (const card of cards) {
+      await this.checkExpiration(card);
+    }
+    return cards;
+  }
+
+  private async checkExpiration(giftCard: GiftCard): Promise<void> {
+    if (
+      giftCard.status !== 'fully_redeemed' &&
+      giftCard.status !== 'cancelled' &&
+      giftCard.currentBalance > 0
+    ) {
+      const template = await this.templatesService.findById(
+        giftCard.templateId,
+      );
+      if (
+        template?.expirationDate &&
+        new Date() > new Date(template.expirationDate)
+      ) {
+        await this.repository.update(giftCard.id, {
+          currentBalance: 0,
+          status: 'fully_redeemed',
+        });
+        giftCard.currentBalance = 0;
+        giftCard.status = 'fully_redeemed';
+      }
+    }
   }
 
   async redeem(
@@ -140,13 +176,24 @@ export class GiftCardsService {
       });
     }
 
-    // Look up template to determine redemption type
+    // Look up template to determine redemption type and expiration
     const template = await this.templatesService.findById(giftCard.templateId);
+
+    if (
+      template?.expirationDate &&
+      new Date() > new Date(template.expirationDate)
+    ) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: { status: 'giftCardExpired' },
+      });
+    }
+
     const isFullRedemption = !template || template.redemptionType === 'full';
 
     const redeemAmount = isFullRedemption
       ? giftCard.currentBalance
-      : dto.amount ?? giftCard.currentBalance;
+      : (dto.amount ?? giftCard.currentBalance);
 
     if (redeemAmount > giftCard.currentBalance) {
       throw new UnprocessableEntityException({

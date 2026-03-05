@@ -9,9 +9,7 @@ import { SortGiftCardTemplateDto } from './dto/query-gift-card-template.dto';
 
 @Injectable()
 export class GiftCardTemplatesService {
-  constructor(
-    private readonly repository: GiftCardTemplateRepository,
-  ) {}
+  constructor(private readonly repository: GiftCardTemplateRepository) {}
 
   create(
     dto: CreateGiftCardTemplateDto,
@@ -23,6 +21,11 @@ export class GiftCardTemplatesService {
       image: dto.image,
       codePosition: dto.codePosition,
       redemptionType: dto.redemptionType || 'full',
+      expirationDate: dto.expirationDate
+        ? new Date(dto.expirationDate)
+        : undefined,
+      codePrefix: dto.codePrefix || 'GC',
+      qrPosition: dto.qrPosition,
       isActive: dto.isActive ?? true,
       createdBy: userId,
     });

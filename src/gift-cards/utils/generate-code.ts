@@ -9,6 +9,6 @@ function randomSegment(length: number): string {
     .join('');
 }
 
-export function generateGiftCardCode(): string {
-  return `GC-${randomSegment(4)}-${randomSegment(4)}-${randomSegment(4)}`;
+export function generateGiftCardCode(prefix = 'GC'): string {
+  return `${prefix}-${randomSegment(4)}-${randomSegment(4)}`;
 }

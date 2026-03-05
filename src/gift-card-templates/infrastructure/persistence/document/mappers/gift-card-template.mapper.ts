@@ -5,9 +5,7 @@ import {
 import { GiftCardTemplateSchemaClass } from '../entities/gift-card-template.schema';
 
 export class GiftCardTemplateMapper {
-  static toDomain(
-    raw: GiftCardTemplateSchemaClass,
-  ): GiftCardTemplate {
+  static toDomain(raw: GiftCardTemplateSchemaClass): GiftCardTemplate {
     const domain = new GiftCardTemplate();
     domain.id = raw._id.toString();
     domain.name = raw.name;
@@ -27,7 +25,11 @@ export class GiftCardTemplateMapper {
     }
 
     domain.isActive = raw.isActive;
-    domain.redemptionType = (raw.redemptionType as 'partial' | 'full') || 'full';
+    domain.redemptionType =
+      (raw.redemptionType as 'partial' | 'full') || 'full';
+    domain.expirationDate = raw.expirationDate || undefined;
+    domain.codePrefix = raw.codePrefix || 'GC';
+    domain.qrPosition = raw.qrPosition || undefined;
     domain.createdBy = raw.createdBy;
     domain.createdAt = raw.createdAt;
     domain.updatedAt = raw.updatedAt;
@@ -35,9 +37,7 @@ export class GiftCardTemplateMapper {
     return domain;
   }
 
-  static toPersistence(
-    domain: GiftCardTemplate,
-  ): GiftCardTemplateSchemaClass {
+  static toPersistence(domain: GiftCardTemplate): GiftCardTemplateSchemaClass {
     const persistence = new GiftCardTemplateSchemaClass();
     if (domain.id) {
       persistence._id = domain.id;
@@ -48,6 +48,9 @@ export class GiftCardTemplateMapper {
     persistence.codePosition = domain.codePosition;
     persistence.isActive = domain.isActive;
     persistence.redemptionType = domain.redemptionType;
+    persistence.expirationDate = domain.expirationDate;
+    persistence.codePrefix = domain.codePrefix;
+    persistence.qrPosition = domain.qrPosition;
     persistence.createdBy = domain.createdBy;
     persistence.createdAt = domain.createdAt;
     persistence.updatedAt = domain.updatedAt;

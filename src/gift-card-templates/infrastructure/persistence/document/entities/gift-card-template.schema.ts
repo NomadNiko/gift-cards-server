@@ -52,6 +52,15 @@ export class GiftCardTemplateSchemaClass extends EntityDocumentHelper {
   @Prop({ default: 'full', enum: ['partial', 'full'] })
   redemptionType: string;
 
+  @Prop({ default: null })
+  expirationDate?: Date;
+
+  @Prop({ default: 'GC' })
+  codePrefix: string;
+
+  @Prop({ type: Object, default: null })
+  qrPosition?: { x: number; y: number; size: number };
+
   @Prop({ default: true })
   isActive: boolean;
 

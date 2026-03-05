@@ -1,10 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CodePosition {
-  @ApiProperty({ example: 10, description: 'X coordinate as percentage (0-100)' })
+  @ApiProperty({
+    example: 10,
+    description: 'X coordinate as percentage (0-100)',
+  })
   x: number;
 
-  @ApiProperty({ example: 80, description: 'Y coordinate as percentage (0-100)' })
+  @ApiProperty({
+    example: 80,
+    description: 'Y coordinate as percentage (0-100)',
+  })
   y: number;
 
   @ApiProperty({ example: 80, description: 'Width as percentage (0-100)' })
@@ -21,6 +27,26 @@ export class CodePosition {
 
   @ApiPropertyOptional({ enum: ['left', 'center', 'right'], example: 'center' })
   alignment?: 'left' | 'center' | 'right';
+}
+
+export class QrPosition {
+  @ApiProperty({
+    example: 85,
+    description: 'X coordinate as percentage (0-100)',
+  })
+  x: number;
+
+  @ApiProperty({
+    example: 5,
+    description: 'Y coordinate as percentage (0-100)',
+  })
+  y: number;
+
+  @ApiProperty({
+    example: 12,
+    description: 'Size as percentage of image width (square)',
+  })
+  size: number;
 }
 
 export class GiftCardTemplate {
@@ -41,6 +67,19 @@ export class GiftCardTemplate {
 
   @ApiProperty({ enum: ['partial', 'full'], example: 'full' })
   redemptionType: 'partial' | 'full';
+
+  @ApiPropertyOptional({ type: String, example: '2026-12-31' })
+  expirationDate?: Date;
+
+  @ApiProperty({
+    type: String,
+    example: 'GC',
+    description: 'Prefix for generated gift card codes',
+  })
+  codePrefix: string;
+
+  @ApiPropertyOptional({ type: () => QrPosition })
+  qrPosition?: QrPosition;
 
   @ApiProperty({ type: Boolean })
   isActive: boolean;

@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsDateString,
   IsIn,
   IsNotEmpty,
   IsNumber,
@@ -53,6 +54,26 @@ export class CodePositionDto {
   alignment?: 'left' | 'center' | 'right';
 }
 
+export class QrPositionDto {
+  @ApiProperty({ example: 85 })
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  x: number;
+
+  @ApiProperty({ example: 5 })
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  y: number;
+
+  @ApiProperty({ example: 12 })
+  @IsNumber()
+  @Min(1)
+  @Max(100)
+  size: number;
+}
+
 export class CreateGiftCardTemplateDto {
   @ApiProperty({ example: 'Holiday Special' })
   @IsNotEmpty()
@@ -83,4 +104,23 @@ export class CreateGiftCardTemplateDto {
   @IsOptional()
   @IsIn(['partial', 'full'])
   redemptionType?: 'partial' | 'full';
+
+  @ApiPropertyOptional({ example: '2026-12-31' })
+  @IsOptional()
+  @IsDateString()
+  expirationDate?: string;
+
+  @ApiPropertyOptional({
+    example: 'GC',
+    description: 'Prefix for generated gift card codes',
+  })
+  @IsOptional()
+  @IsString()
+  codePrefix?: string;
+
+  @ApiPropertyOptional({ type: QrPositionDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => QrPositionDto)
+  qrPosition?: QrPositionDto;
 }
