@@ -1,73 +1,105 @@
-# NestJS REST API boilerplate 🇺🇦
+# The Hurstwood — Gift Card Management System (Backend)
 
-[![image](https://github.com/brocoders/nestjs-boilerplate/assets/72293912/197da43e-02f4-4895-8d3e-b7a42a591c26)](https://github.com/new?template_name=nestjs-boilerplate&template_owner=brocoders)
+A NestJS REST API powering the gift card management system for The Hurstwood restaurant. Handles gift card templates, purchases, redemptions, email delivery with PDF attachments, and embeddable purchase widgets.
 
-![github action status](https://github.com/brocoders/nestjs-boilerplate/actions/workflows/docker-e2e.yml/badge.svg)
-[![renovate](https://img.shields.io/badge/renovate-enabled-%231A1F6C?logo=renovatebot)](https://app.renovatebot.com/dashboard)
-[![Static Badge](https://img.shields.io/badge/supported_by-brocoders-d91965?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTMwIiBoZWlnaHQ9IjE4NyIgdmlld0JveD0iMCAwIDEzMCAxODciIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BCjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF83NzExXzQ4OTEpIj4KPHBhdGggZD0iTTc1Ljk5NjcgNDUuNzUwNkM2NS4xMDg5IDQ2Ljg2MSA1Ny45MjMgNTguNDA5NyA2Mi4yNzgxIDY4Ljg0OEwxMDguNDQyIDE4N0w3My42MDEzIDE1NS4wMTlIMzQuODQwOUMyMC42ODY4IDE1NS4wMTkgOS4zNjM0OSAxNDMuNDcgOS4zNjM0OSAxMjkuMDM0Vjk0LjYxMDVDOS4zNjM0OSA5Mi4xNjc1IDguNDkyNDYgODkuNzI0NSA2Ljc1MDQyIDg3Ljk0NzdMMCA4MS4wNjNMNi43NTA0MiA3NC4xNzgxQzguNDkyNDYgNzIuNDAxNCA5LjM2MzQ5IDY5Ljk1ODQgOS4zNjM0OSA2Ny41MTU0VjMxLjA5MjZDOS4zNjM0OSAxMy43Njk2IDIzLjA4MjEgMCAzOS44NDkyIDBINTguMTQwN0w3NS45OTY3IDQ1Ljc1MDZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTI1LjY0NiAxMTIuMzc4Vjk0LjgzMjdDMTI1LjY0NiA5My43MjIyIDEyNi4wODEgOTIuNjExOCAxMjYuOTUyIDkxLjcyMzRMMTMwLjAwMSA4OC4zOTIxTDEyNi45NTIgODUuMDYwN0MxMjYuMDgxIDg0LjE3MjQgMTI1LjY0NiA4My4wNjE5IDEyNS42NDYgODEuOTUxNFY2OS43MzY1QzEyNS42NDYgNTYuNDExMSAxMTQuOTc2IDQ1Ljc1MDcgMTAyLjEyOCA0NS43NTA3SDc1Ljk5NzNMMTA1LjYxMiAxMzAuODExQzEwNS42MTIgMTMwLjgxMSAxMTAuNjIgMTMwLjgxMSAxMTAuODM4IDEzMC44MTFDMTE5LjExMyAxMjkuMDM1IDEyNS42NDYgMTIxLjQ4NCAxMjUuNjQ2IDExMi4zNzhaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c%2BCjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzc3MTFfNDg5MSI%2BCjxyZWN0IHdpZHRoPSIxMzAiIGhlaWdodD0iMTg3IiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM%2BCjwvc3ZnPgo%3D&logoColor=d91965)](https://brocoders.com/)
-[![Discord Badge](https://img.shields.io/badge/discord-NodeJS_boilerplate-d91965?style=flat&labelColor=5866f2&logo=discord&logoColor=white&link=https://discord.com/channels/520622812742811698/1197293125434093701)](https://discord.com/channels/520622812742811698/1197293125434093701)
+**Live API**: <https://gift-cards-server.nomadsoft.us/api>
 
-<br />
-<p align="center"><a href="https://discord.com/channels/520622812742811698/1197293125434093701"><img src="https://github.com/brocoders/nestjs-boilerplate/assets/72293912/c9d5fbf0-b56d-46b5-bb30-f96f44764bae" width="300"/></a></p>
-<br />
-
-## Description <!-- omit in toc -->
-
-NestJS REST API boilerplate for a typical project
-
-[Full documentation here](/docs/readme.md)
-
-Demo: <https://nestjs-boilerplate-test.herokuapp.com/docs>
-
-A fully compatible frontend boilerplate: <https://github.com/brocoders/extensive-react-boilerplate>
-
-Belongs to the [bc boilerplates](https://bcboilerplates.com/) ecosystem
-
-<https://github.com/user-attachments/assets/a66f114a-c714-4036-8eeb-20cbf04ae985>
-
-## Table of Contents <!-- omit in toc -->
-
-- [Features](#features)
-- [Contributors](#contributors)
-- [Support](#support)
+**Frontend Repository**: `/var/www/gift-cards/`
 
 ## Features
 
-- [x] Database. Support [TypeORM](https://www.npmjs.com/package/typeorm) and [Mongoose](https://www.npmjs.com/package/mongoose).
-- [x] Seeding.
-- [x] Config Service ([@nestjs/config](https://www.npmjs.com/package/@nestjs/config)).
-- [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer)).
-- [x] Sign in and sign up via email.
-- [x] Social sign in (Apple, Facebook, Google).
-- [x] Admin and User roles.
-- [x] Internationalization/Translations (I18N) ([nestjs-i18n](https://www.npmjs.com/package/nestjs-i18n)).
-- [x] File uploads. Support local and Amazon S3 drivers.
-- [x] Swagger.
-- [x] E2E and units tests.
-- [x] Docker.
-- [x] CI (Github Actions).
+### Gift Card Templates
+- Full CRUD with admin-only access
+- Custom image upload with configurable code overlay position (x/y/width/height as %, font size, color, alignment)
+- Configurable QR code position (x/y/size as %)
+- Customizable code prefix (e.g. `GC`, `HW`) — codes generated as `{PREFIX}-XXXX-XXXX`
+- Optional expiration date with auto-expiry on lookup
+- Redemption type per template: `full` (single use) or `partial` (multi-use balance)
+- Public endpoint for active templates (used by purchase widgets)
 
-## Contributors
+### Gift Cards (Purchases)
+- Purchase creates a gift card, generates a unique code, and sends confirmation emails
+- Lookup by code or email (public endpoints)
+- Redeem with full or partial amount support and audit trail
+- Auto-expire on lookup when past expiration date
+- Paginated listing with sort support
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Shchepotin"><img src="https://avatars.githubusercontent.com/u/6001723?v=4?s=100" width="100px;" alt="Vladyslav Shchepotin"/><br /><sub><b>Vladyslav Shchepotin</b></sub></a><br /><a href="#maintenance-Shchepotin" title="Maintenance">🚧</a> <a href="#doc-Shchepotin" title="Documentation">📖</a> <a href="#code-Shchepotin" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/SergeiLomako"><img src="https://avatars.githubusercontent.com/u/31205374?v=4?s=100" width="100px;" alt="SergeiLomako"/><br /><sub><b>SergeiLomako</b></sub></a><br /><a href="#code-SergeiLomako" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ElenVlass"><img src="https://avatars.githubusercontent.com/u/72293912?v=4?s=100" width="100px;" alt="Elena Vlasenko"/><br /><sub><b>Elena Vlasenko</b></sub></a><br /><a href="#doc-ElenVlass" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://brocoders.com"><img src="https://avatars.githubusercontent.com/u/226194?v=4?s=100" width="100px;" alt="Rodion"/><br /><sub><b>Rodion</b></sub></a><br /><a href="#business-sars" title="Business development">💼</a></td>
-    </tr>
-  </tbody>
-</table>
+### Email System
+- Purchase confirmation email with inline gift card image and PDF attachment
+- Gift card image rendered via puppeteer-core with code overlay, expiration label, and QR code positioned per template settings
+- PDF generated with the same layout plus a details section
+- BCC to configurable notification email list
+- Separate purchase notification email to the notification list
+- Currency symbol pulled from settings
 
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+### Widgets
+- CRUD for embeddable purchase widgets
+- Auto-generated `wgt_` prefixed API keys
+- Public endpoint to fetch widget config by API key
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+### Settings
+- Single-document MongoDB store
+- Currency (GBP/EUR/USD), default redemption type, notification email list
+- Public GET + admin-only PATCH
 
-## Support
+## Tech Stack
 
-If you seek consulting, support, or wish to collaborate, please contact us via [boilerplates@brocoders.com](mailto:boilerplates@brocoders.com). For any inquiries regarding boilerplates, feel free to ask on [GitHub Discussions](https://github.com/brocoders/nestjs-boilerplate/discussions) or [Discord](https://discord.com/channels/520622812742811698/1197293125434093701).
+- NestJS 10, TypeScript
+- MongoDB via Mongoose
+- Passport JWT authentication with role-based guards
+- Nodemailer for email delivery
+- Handlebars email templates
+- puppeteer-core + Chrome 143 for PDF/image generation
+- qrcode package for QR code data URLs
+
+## Getting Started
+
+```bash
+cp env-example .env
+npm install
+npm run start:dev
+```
+
+### Environment Variables
+
+Key variables in `.env`:
+- `DATABASE_URL` — MongoDB connection string
+- `FRONTEND_DOMAIN` — Frontend URL for email links (e.g. `https://gift-cards.nomadsoft.us`)
+- `MAIL_HOST`, `MAIL_PORT`, `MAIL_USER`, `MAIL_PASSWORD` — SMTP config
+- `APP_NAME` — Used in email subjects and templates (currently "The Hurstwood")
+
+## API Endpoints
+
+All endpoints are versioned under `/api/v1/`.
+
+| Resource | Auth | Description |
+|---|---|---|
+| `POST /gift-card-templates` | Admin | Create template |
+| `GET /gift-card-templates` | Admin | List templates (paginated) |
+| `GET /gift-card-templates/active` | Public | Active templates |
+| `GET /gift-card-templates/:id` | Admin | Get template |
+| `PATCH /gift-card-templates/:id` | Admin | Update template |
+| `DELETE /gift-card-templates/:id` | Admin | Soft delete template |
+| `POST /gift-cards/purchase` | Public | Purchase a gift card |
+| `GET /gift-cards` | Admin | List purchases (paginated) |
+| `GET /gift-cards/code/:code` | Public | Lookup by code |
+| `GET /gift-cards/email/:email` | Public | Lookup by email |
+| `POST /gift-cards/redeem` | Admin | Redeem a gift card |
+| `POST /gift-cards/:id/cancel` | Admin | Cancel a gift card |
+| `GET /settings` | Public | Get settings |
+| `PATCH /settings` | Admin | Update settings |
+| `POST /widgets` | Admin | Create widget |
+| `GET /widgets` | Admin | List widgets |
+| `GET /widgets/public/:apiKey` | Public | Get widget by API key |
+| `PATCH /widgets/:id` | Admin | Update widget |
+| `DELETE /widgets/:id` | Admin | Delete widget |
+
+## Deployment
+
+The app runs under PM2 as `gift-cards-server` (id 30).
+
+```bash
+npx prettier --write <changed files>
+npm run build
+pm2 restart gift-cards-server
+```
