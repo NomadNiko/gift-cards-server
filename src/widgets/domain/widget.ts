@@ -60,6 +60,9 @@ export class Widget {
   @ApiProperty({ type: String })
   createdBy: string;
 
+  @ApiPropertyOptional()
+  redirectUrl?: string;
+
   @ApiProperty()
   createdAt: Date;
 

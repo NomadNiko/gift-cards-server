@@ -5,6 +5,7 @@ import { DocumentGiftCardPersistenceModule } from './infrastructure/persistence/
 import { MailModule } from '../mail/mail.module';
 import { GiftCardTemplatesModule } from '../gift-card-templates/gift-card-templates.module';
 import { SettingsModule } from '../settings/settings.module';
+import { StripeModule } from '../stripe/stripe.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { SettingsModule } from '../settings/settings.module';
     MailModule,
     GiftCardTemplatesModule,
     SettingsModule,
+    StripeModule,
   ],
   controllers: [GiftCardsController],
   providers: [GiftCardsService],

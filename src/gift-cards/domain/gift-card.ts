@@ -65,6 +65,9 @@ export class GiftCard {
   @ApiPropertyOptional()
   notes?: string;
 
+  @ApiPropertyOptional()
+  stripeSessionId?: string;
+
   @ApiProperty()
   createdAt: Date;
 

@@ -74,6 +74,13 @@ export class GiftCardsDocumentRepository implements GiftCardRepository {
     return results.map(GiftCardMapper.toDomain);
   }
 
+  async findByStripeSessionId(
+    sessionId: string,
+  ): Promise<NullableType<GiftCard>> {
+    const result = await this.model.findOne({ stripeSessionId: sessionId });
+    return result ? GiftCardMapper.toDomain(result) : null;
+  }
+
   async update(
     id: GiftCard['id'],
     payload: Partial<GiftCard>,

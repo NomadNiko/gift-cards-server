@@ -26,6 +26,7 @@ export class WidgetsService {
       customization: dto.customization,
       isActive: dto.isActive ?? true,
       createdBy: userId,
+      redirectUrl: dto.redirectUrl,
     });
   }
 
@@ -84,7 +85,13 @@ export class WidgetsService {
     }
 
     const iframe = document.createElement('iframe');
-    iframe.src = \`\${CONFIG.appUrl}/widget/\${CONFIG.apiKey}\`;
+    var widgetUrl = \`\${CONFIG.appUrl}/widget/\${CONFIG.apiKey}\`;
+    var urlParams = new URLSearchParams(window.location.search);
+    var sessionId = urlParams.get('session_id');
+    if (sessionId) {
+      widgetUrl += '?session_id=' + encodeURIComponent(sessionId);
+    }
+    iframe.src = widgetUrl;
     iframe.style.cssText = 'width: 100%; max-width: 600px; height: 660px; border: none; display: block; overflow: hidden;';
     iframe.setAttribute('allow', 'clipboard-write');
     iframe.setAttribute('scrolling', 'no');

@@ -26,7 +26,10 @@ export class GiftCardsService {
     private readonly settingsService: SettingsService,
   ) {}
 
-  async purchase(dto: CreateGiftCardDto): Promise<GiftCard> {
+  async purchase(
+    dto: CreateGiftCardDto,
+    stripeSessionId?: string,
+  ): Promise<GiftCard> {
     const template = await this.templatesService.findById(dto.templateId);
     const prefix = template?.codePrefix || 'GC';
 
@@ -49,6 +52,7 @@ export class GiftCardsService {
       status: 'active',
       redemptions: [],
       notes: dto.notes,
+      stripeSessionId,
     });
 
     const settings = await this.settingsService.get();
@@ -103,6 +107,10 @@ export class GiftCardsService {
     }
 
     return giftCard;
+  }
+
+  findByStripeSessionId(sessionId: string): Promise<NullableType<GiftCard>> {
+    return this.repository.findByStripeSessionId(sessionId);
   }
 
   findManyWithPagination(params: {

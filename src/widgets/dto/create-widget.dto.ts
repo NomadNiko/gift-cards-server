@@ -90,4 +90,9 @@ export class CreateWidgetDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  redirectUrl?: string;
 }

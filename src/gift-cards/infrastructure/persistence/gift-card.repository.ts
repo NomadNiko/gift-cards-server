@@ -20,6 +20,10 @@ export abstract class GiftCardRepository {
 
   abstract findByEmail(email: string): Promise<GiftCard[]>;
 
+  abstract findByStripeSessionId(
+    sessionId: string,
+  ): Promise<NullableType<GiftCard>>;
+
   abstract update(
     id: GiftCard['id'],
     payload: Partial<GiftCard>,

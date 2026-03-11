@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../roles/roles.guard';
 import { Roles } from '../roles/roles.decorator';
@@ -22,6 +16,15 @@ export class SettingsController {
   @Get()
   get(): Promise<Settings> {
     return this.service.get();
+  }
+
+  @Get('public/payment-config')
+  async getPublicPaymentConfig() {
+    const s = await this.service.get();
+    return {
+      paymentMode: s.paymentMode,
+      paymentGateway: s.paymentGateway,
+    };
   }
 
   @Patch()

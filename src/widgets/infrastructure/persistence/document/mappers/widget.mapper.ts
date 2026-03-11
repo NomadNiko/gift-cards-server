@@ -11,6 +11,7 @@ export class WidgetMapper {
     domain.allowedDomains = raw.allowedDomains;
     domain.isActive = raw.isActive;
     domain.createdBy = raw.createdBy;
+    domain.redirectUrl = raw.redirectUrl;
     domain.createdAt = raw.createdAt;
     domain.updatedAt = raw.updatedAt;
 
@@ -45,6 +46,7 @@ export class WidgetMapper {
     persistence.customization = domain.customization;
     persistence.isActive = domain.isActive;
     persistence.createdBy = domain.createdBy;
+    persistence.redirectUrl = domain.redirectUrl;
     persistence.createdAt = domain.createdAt;
     persistence.updatedAt = domain.updatedAt;
     return persistence;

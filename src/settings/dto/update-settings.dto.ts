@@ -23,4 +23,24 @@ export class UpdateSettingsDto {
   @IsArray()
   @IsEmail({}, { each: true })
   notificationEmails?: string[];
+
+  @ApiPropertyOptional({ enum: ['sandbox', 'production'] })
+  @IsOptional()
+  @IsIn(['sandbox', 'production'])
+  paymentMode?: 'sandbox' | 'production';
+
+  @ApiPropertyOptional({ enum: ['stripe', 'square'] })
+  @IsOptional()
+  @IsIn(['stripe', 'square'])
+  paymentGateway?: 'stripe' | 'square';
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  stripeSecretKey?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  stripeWebhookSecret?: string;
 }

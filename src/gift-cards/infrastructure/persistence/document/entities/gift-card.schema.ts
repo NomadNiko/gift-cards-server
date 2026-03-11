@@ -75,6 +75,9 @@ export class GiftCardSchemaClass extends EntityDocumentHelper {
   @Prop()
   notes?: string;
 
+  @Prop()
+  stripeSessionId?: string;
+
   @Prop({ default: now })
   createdAt: Date;
 

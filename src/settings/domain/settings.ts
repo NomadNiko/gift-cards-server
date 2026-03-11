@@ -13,6 +13,18 @@ export class Settings {
   @ApiProperty({ type: [String], example: ['manager@example.com'] })
   notificationEmails: string[];
 
+  @ApiProperty({ enum: ['sandbox', 'production'], example: 'sandbox' })
+  paymentMode: 'sandbox' | 'production';
+
+  @ApiProperty({ enum: ['stripe', 'square'], example: 'stripe' })
+  paymentGateway: 'stripe' | 'square';
+
+  @ApiPropertyOptional()
+  stripeSecretKey?: string;
+
+  @ApiPropertyOptional()
+  stripeWebhookSecret?: string;
+
   @ApiProperty()
   updatedAt: Date;
 }

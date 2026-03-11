@@ -20,6 +20,7 @@ export class GiftCardMapper {
     domain.recipientName = raw.recipientName;
     domain.status = raw.status as GiftCard['status'];
     domain.notes = raw.notes;
+    domain.stripeSessionId = raw.stripeSessionId;
     domain.createdAt = raw.createdAt;
     domain.updatedAt = raw.updatedAt;
 
@@ -54,6 +55,7 @@ export class GiftCardMapper {
     persistence.recipientName = domain.recipientName;
     persistence.status = domain.status;
     persistence.notes = domain.notes;
+    persistence.stripeSessionId = domain.stripeSessionId;
     persistence.createdAt = domain.createdAt;
     persistence.updatedAt = domain.updatedAt;
 

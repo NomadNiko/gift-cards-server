@@ -37,6 +37,11 @@ export class SettingsRepository {
     s.defaultRedemptionType =
       raw.defaultRedemptionType as Settings['defaultRedemptionType'];
     s.notificationEmails = raw.notificationEmails || [];
+    s.paymentMode = (raw.paymentMode as Settings['paymentMode']) || 'sandbox';
+    s.paymentGateway =
+      (raw.paymentGateway as Settings['paymentGateway']) || 'stripe';
+    s.stripeSecretKey = raw.stripeSecretKey || '';
+    s.stripeWebhookSecret = raw.stripeWebhookSecret || '';
     s.updatedAt = raw.updatedAt;
     return s;
   }

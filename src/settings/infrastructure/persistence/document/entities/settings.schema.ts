@@ -15,6 +15,18 @@ export class SettingsSchemaClass extends EntityDocumentHelper {
   @Prop({ type: [String], default: [] })
   notificationEmails: string[];
 
+  @Prop({ default: 'sandbox', enum: ['sandbox', 'production'] })
+  paymentMode: string;
+
+  @Prop({ default: 'stripe', enum: ['stripe', 'square'] })
+  paymentGateway: string;
+
+  @Prop({ default: '' })
+  stripeSecretKey: string;
+
+  @Prop({ default: '' })
+  stripeWebhookSecret: string;
+
   @Prop({ default: now })
   updatedAt: Date;
 }

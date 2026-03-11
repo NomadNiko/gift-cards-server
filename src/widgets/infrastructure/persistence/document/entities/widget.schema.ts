@@ -70,6 +70,9 @@ export class WidgetSchemaClass extends EntityDocumentHelper {
   @Prop({ required: true })
   createdBy: string;
 
+  @Prop()
+  redirectUrl?: string;
+
   @Prop({ default: now })
   createdAt: Date;
 
